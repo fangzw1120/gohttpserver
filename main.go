@@ -248,6 +248,8 @@ func main() {
 		Addr:    gcfg.Addr,
 	}
 
+	TransferInit()
+
 	var err error
 	if gcfg.Key != "" && gcfg.Cert != "" {
 		err = srv.ListenAndServeTLS(gcfg.Cert, gcfg.Key)

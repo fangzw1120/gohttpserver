@@ -189,6 +189,7 @@ func (s *HTTPStaticServer) hDelete(w http.ResponseWriter, req *http.Request) {
 
 func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Request) {
 	dirpath := s.getRealPath(req)
+	log.Printf("Upload req %+v dirpath: %+v", req, dirpath)
 
 	// check auth
 	auth := s.readAccessConf(dirpath)
@@ -236,6 +237,7 @@ func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Reque
 	}
 
 	dstPath := filepath.Join(dirpath, filename)
+	log.Printf("Upload header: %+v fileName %+v dstPath %+v", header.Header, filename, dstPath)
 
 	// Large file (>32MB) will store in tmp directory
 	// The quickest operation is call os.Move instead of os.Copy
@@ -267,6 +269,11 @@ func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Reque
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	outFilename := generateOutFileName(filename)
+	inputAbsFile := GetMainDirectory() + dstPath
+	outputAbsFile := GetMainDirectory() + filepath.Join(dirpath, outFilename)
+	transferXLS(inputAbsFile, outputAbsFile)
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
 
