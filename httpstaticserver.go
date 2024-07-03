@@ -271,8 +271,8 @@ func (s *HTTPStaticServer) hUploadOrMkdir(w http.ResponseWriter, req *http.Reque
 	}
 
 	outFilename := generateOutFileName(filename)
-	inputAbsFile := GetMainDirectory() + dstPath
-	outputAbsFile := GetMainDirectory() + filepath.Join(dirpath, outFilename)
+	inputAbsFile := dstPath
+	outputAbsFile := filepath.Join(dirpath, outFilename)
 	transferXLS(inputAbsFile, outputAbsFile)
 
 	w.Header().Set("Content-Type", "application/json;charset=utf-8")
